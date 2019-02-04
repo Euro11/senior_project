@@ -25,7 +25,11 @@
                 </li>
                 
                 <li>
-                    <a href="#"><i class="far fa-calendar-check sidebar-icon"></i> Check Attendance</a>
+                    <a href="{{ url('/ManageCheckAttendance')}}"><i class="far fa-calendar-check sidebar-icon"></i> Check Attendance</a>
+                </li>
+                
+                <li>
+                    <a href="{{ url('/ViewStatistics')}}"><i class="fas fa-chart-bar sidebar-icon"></i></i> Statistics</a>
                 </li>
                 
                 <li>

@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Subject;
 use App\Section;
+use App\Classroom;
+use App\User;
 use Session;
 use DB;
+use Auth;
 
 class SectionController extends Controller
 {
@@ -33,7 +36,8 @@ class SectionController extends Controller
     public function createSection($id)
     {
         $subject = Subject::find($id);
-        return view('backend.ManageSubject.CreateSection', compact('subject'));
+        $teacher = User::where('role', '=', 2)->get();
+        return view('backend.ManageSubject.CreateSection', compact('subject', 'teacher'));
     }
 
     /**
@@ -44,16 +48,9 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         try{   
             // store in the database
             $section = new Section;
-            // $section->id = $request->id;
-            // $section->name = $request->name;
-            // $section->year = $request->year;
-            // $section->class_date = $request->class_date;
-            // $section->class_day = $request->class_day;
-            // $section->subject_id = $request->subject_id;
             $section->fill($request->all());
             $section->std_count = 0;
             $section->save();
@@ -74,7 +71,12 @@ class SectionController extends Controller
     public function show($id)
     {
         $section = Section::find($id);
-        return view('backend.ManageSubject.classroom', compact('section'));
+        $classroom = DB::table('classroom')
+                        ->select('classroom.id', 'classroom.section_id', 'classroom.student_id', 'users.name')
+                        ->join('users', 'classroom.student_id', '=', 'users.id')
+                        ->Where('classroom.section_id', '=', $section->id)
+                        ->get();
+        return view('backend.ManageSubject.classroom', compact('section', 'classroom'));
     }
 
     /**
@@ -86,7 +88,8 @@ class SectionController extends Controller
     public function edit($id)
     {
         $section = Section::find($id);
-        return view('backend.ManageSubject.EditSection', compact('section'));
+        $teacher = User::where('role', '=', 2)->get();
+        return view('backend.ManageSubject.EditSection', compact('section', 'teacher'));
     }
     /**
      * Update the specified resource in storage.
@@ -116,5 +119,33 @@ class SectionController extends Controller
         $section->delete();
         Session::flash('delete', 'Section was deleted!');
         return redirect()->route('managesubject.show', $section->subject_id);
+    }
+
+    public function updateStatus(Request $request,$id){
+        $section_prev = Section::find($id); //for go to previous page
+
+        $section = Section::find($id);
+        $teacherId = Auth::user()->id; //call userID in session for change check_button_status value
+        if ($teacherId == $section->teacher_id) {
+            if ($request->check_button_status == 1) {
+                $section->check_button_status = $request->check_button_status;
+                $section->save();
+                Session::flash('success','เริ่มการเช็คชื่อ');
+            }
+            elseif ($request->check_button_status == 0) {
+                $section->check_button_status = $request->check_button_status;
+                $section->save();
+                Session::flash('delete', 'หมดเวลาเรียน');
+            }
+            elseif ($request->check_button_status == 2) {
+                $section->check_button_status = $request->check_button_status;
+                $section->save();
+                Session::flash('warning', 'หมดเวลาเช็คชื่อ');
+            }
+            return redirect()->route('ManageCheckAttendance.show', $section_prev->id);
+        } else {
+            Session::flash('delete', 'คุณไม่ใช่ผู้รับผิดชอบในรายวิชานี้');
+            return redirect()->route('ManageCheckAttendance.show', $section_prev->id);
+        }
     }
 }

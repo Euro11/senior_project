@@ -32,6 +32,7 @@
 <br>
     <div class="card">
         <div class="card-body">
+            <!-- Form -->
             <form method="POST" action="{{ route('class.store') }}">
             @csrf
                 <!-- Section --> 
@@ -45,43 +46,16 @@
                         <input type="text" class="form-control" name="section_id" value="{{ $section->id }}">
                     </div>
                 </div>
-                <!-- add Teacher --> 
-                <div class="card-title">
-                    <h3>Teacher</h3>
-                </div>
-                <div class="form-group row">
-                    <label for="teacher_id" class="col-md-4 col-form-label text-md-right">{{ __('Teacher') }}</label>
 
-                    <div class="col-md-6">                                   
-                        <table id="datatables" class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th width="5">ID.</th>
-                                    <th>Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($teacher as $t)
-                                <tr>
-                                    <td>{{ $t->id }}</td>
-                                    <td>{{ $t->name }}</td>
-                                    <td><input type="checkbox"> ADD to class</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div> 
                 <!-- add student -->
                 <div class="card-title">
                     <h3>Student</h3>
                 </div>
                 <div class="form-group row">
-                    <label for="student_id" class="col-md-4 col-form-label text-md-right">{{ __('Student') }}</label>
+                    <label class="col-md-4 col-form-label text-md-right">{{ __('Student') }}</label>
 
                     <div class="col-md-6">
-                        <table id="datatables2" class="table table-striped table-bordered">
+                        <table id="datatables" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th width="5">ID.</th>
@@ -94,7 +68,7 @@
                                 <tr>
                                     <td>{{ $s->id }}</td>
                                     <td>{{ $s->name }}</td>
-                                    <td><input type="checkbox"> ADD to class</td>
+                                    <td><input type="checkbox" name="student_id[]" value="{{ $s->id }}"> ADD to class</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -121,11 +95,4 @@
 </div>
 @endsection
 @section('javascript')
-<script>
-    $(document).ready(function() {
-        $('#datatables2').DataTable( {
-            responsive: true,
-        } );
-    } );
-</script>
 @endsection

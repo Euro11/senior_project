@@ -27,13 +27,13 @@ class HomeController extends Controller
     public function profile($id)
     {
         $user = User::find($id);
-        return view('fontend.profile.profile', compact('user'));
+        return view('frontend.profile.profile', compact('user'));
     }
 
     public function edit($id)
     {
         $user = User::find($id);
-        return view('fontend.profile.EditProfile', compact('user'));
+        return view('frontend.profile.EditProfile', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -51,6 +51,6 @@ class HomeController extends Controller
             die($e->getMessage());
         }
         Session::flash('success', 'ข้อมูลส่วนตัวอัพเดทแล้ว!');
-        return view('fontend.profile.profile', compact('user'));
+        return view('frontend.profile.profile', compact('user'));
     }
 }

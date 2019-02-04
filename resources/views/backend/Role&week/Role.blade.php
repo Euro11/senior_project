@@ -47,11 +47,11 @@
                                             <a href="{{ route('role.edit', $r->id)}}"> 
                                                 <button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></button>
                                             </a>
-                                            <form action="{{ route('role.destroy', $r->id)}}" method="POST">
+                                            <!-- <form action="{{ route('role.destroy', $r->id)}}" method="POST">
                                                 {!! method_field('DELETE') !!}
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> </button>
-                                            </form>
+                                            </form> -->
 
                                         </div>
                                     </td>
@@ -62,7 +62,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md">
+        <!-- <div class="col-md">
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
@@ -91,7 +91,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
@@ -116,11 +116,11 @@
                                             <a href="{{ route('week.edit', $w->id)}}"> 
                                                 <button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></button>
                                             </a>
-                                            <form action="{{ route('week.destroy', $w->id)}}" method="POST">
+                                            <!-- <form action="{{ route('week.destroy', $w->id)}}" method="POST">
                                                 {!! method_field('DELETE') !!}
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> </button>
-                                            </form>
+                                            </form> -->
 
                                         </div>
                                     </td>
@@ -131,7 +131,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md">
+        <!-- <div class="col-md">
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
@@ -159,8 +159,8 @@
                 </div>
             </form>
             </div>
-        </div>
-        </div>
+            </div>
+        </div> -->
     </div>
 </div>
 @endsection

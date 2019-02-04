@@ -37,9 +37,8 @@
                             <tr>
                                 <th>subject id</th>
                                 <th>subject name</th>
-                                <th>description</th>
                                 <th>unit</th>
-                                <th>Action</th>
+                                <th width="20%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,7 +46,6 @@
                                 <tr>
                                     <td>{{ $value->id }}</td>
                                     <td>{{ $value->sub_name }}</td>
-                                    <td>{!! $value->sub_description !!}</td>
                                     <td>{{ $value->sub_unit }}</td>
                                     <td>
                                         <div class="form-group d-flex justify-content-around">
@@ -57,11 +55,28 @@
                                             <a href="{{route('managesubject.edit', $value->id)}}"> 
                                                 <button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></button>
                                             </a>
-                                            <form action="{{route('managesubject.destroy', $value->id)}}" method="POST">
-                                                {!! method_field('DELETE') !!}
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> </button>
-                                            </form>
+                                            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm"><i class="fa fa-times"></i> </button>
+                                            <!-- Modal Confirm -->
+                                            <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                            <div class="modal-dialog modal-sm" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <i class="fas fa-exclamation-triangle fa-5x"></i><br>
+                                                    คุณต้องการ "ลบ" วิชานี้ใช่หรือไม่ ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="{{route('managesubject.destroy', $value->id)}}" method="POST">
+                                                        {!! method_field('DELETE') !!}
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success">ใช่</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">ไม่ใช่</button>
+                                                    </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                                            <!-- End modal -->
 
                                         </div>
                                     </td>

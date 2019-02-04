@@ -35,22 +35,20 @@
                     <table id="datatables" class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th>section name</th>
-                                <th>ปีการศึกษา</th>
-                                <th>เวลาที่เรียน</th>
-                                <th>วันที่เรียน</th>
-                                <th>Count</th>
-                                <th>Action</th>
+                                <th>section</th>
+                                <th>อาจารย์ผู้สอน</th>
+                                <th width="10%">ปีการศึกษา</th>
+                                <th width="5%">จำนวนผู้เรียน</th>
+                                <th width="15%">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($section as $s)
                                 <tr>
-                                    <td>{{ $s->name }}</td>
+                                    <td>{{ $s->name }} ({{ $s->day_name }} : {{ $s->class_date }})</td>
+                                    <td>{{ $s->teacher_name }}</td>
                                     <td>{{ $s->year }}</td>
-                                    <td>{{ $s->class_date }}</td>
-                                    <td>{{ $s->class_day }}</td>
-                                    <td>
+                                    <td  class="text-center">
                                         {{ $s->std_count }}
                                         <a href="{{ route('section.show', $s->id)}}"> 
                                             <button type="submit" class="btn btn-info"><i class="fas fa-user-plus"></i></button>
@@ -62,11 +60,28 @@
                                             <a href="{{ route('section.edit', $s->id)}}"> 
                                                 <button type="submit" class="btn btn-warning"><i class="fas fa-pencil-alt"></i></button>
                                             </a>
-                                            <form action="{{ route('section.destroy', $s->id)}}" method="POST">
-                                                {!! method_field('DELETE') !!}
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> </button>
-                                            </form>
+                                            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm"><i class="fa fa-times"></i> </button>
+                                            <!-- Modal Confirm -->
+                                            <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                            <div class="modal-dialog modal-sm" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <i class="fas fa-exclamation-triangle fa-5x"></i><br>
+                                                    คุณต้องการ "ลบ" เซคชั่นนี้ใช่หรือไม่ ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="{{ route('section.destroy', $s->id)}}" method="POST">
+                                                        {!! method_field('DELETE') !!}
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success">ใช่</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">ไม่ใช่</button>
+                                                    </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                                            <!-- End modal -->  
 
                                         </div>
                                     </td>

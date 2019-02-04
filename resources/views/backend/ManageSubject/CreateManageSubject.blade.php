@@ -43,13 +43,12 @@
                             <label for="sub_unit" class="col-md-4 col-form-label text-md-right">{{ __('Unit') }}</label>
 
                             <div class="col-md-6">
-                                <input id="sub_unit" type="text" class="form-control{{ $errors->has('sub_unit') ? ' is-invalid' : '' }}" name="sub_unit" required autofocus>
-
-                                @if ($errors->has('sub_unit'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('sub_unit') }}</strong>
-                                    </span>
-                                @endif
+                                <select id="sub_unit" class="select2-multi form-control" name="sub_unit">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="6">6</option>
+                                </select>
                             </div>
                         </div>
 

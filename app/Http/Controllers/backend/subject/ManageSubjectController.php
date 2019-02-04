@@ -61,8 +61,12 @@ class ManageSubjectController extends Controller
     public function show($id)
     {
         $subject = Subject::find($id);
-        $section = Section::where('subject_id', '=', $id)->get();
-        // dd($section);
+        $section = DB::table('section')
+                    ->select('section.*', 'users.name as teacher_name', 'week.day_name')
+                    ->join('users', 'section.teacher_id', '=', 'users.id')
+                    ->join('week', 'section.class_day', '=', 'week.id')
+                    ->Where('section.subject_id', '=', $subject->id)
+                    ->get();
         return view('backend.ManageSubject.Section', compact('subject', 'section'));
     }
 

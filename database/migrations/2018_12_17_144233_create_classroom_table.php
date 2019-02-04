@@ -21,9 +21,6 @@ class CreateClassroomTable extends Migration
             
             $table->integer('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-
-            $table->integer('teacher_id')->unsigned();
-            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             
             $table->timestamps();
         });

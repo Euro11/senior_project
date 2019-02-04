@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','type',
+        'name', 'email', 'password','role','std_id','img_profile',
     ];
 
     /**
@@ -28,8 +28,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function sections()
-    {
-        return $this->belongsToMany('App\Section');
-    }
+    // public function sections()
+    // {
+    //     return $this->belongsToMany('App\Section');
+    // }
 }

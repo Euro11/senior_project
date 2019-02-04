@@ -49,7 +49,7 @@ class StatisticController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        return view('fontend.Statistic.statistic', compact('user'));
+        return view('frontend.Statistic.statistic', compact('user'));
     }
 
     /**

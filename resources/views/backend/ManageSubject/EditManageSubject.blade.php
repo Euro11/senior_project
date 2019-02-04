@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
-                        <h3>Edit User</h3>
+                        <h3>Edit Subject</h3>
                     </div>
                     <form method="POST" action="{{route('managesubject.update', $subject->id)}}">
                         @csrf
@@ -46,13 +46,13 @@
                             <label for="sub_unit" class="col-md-4 col-form-label text-md-right">{{ __('Unit') }}</label>
 
                             <div class="col-md-6">
-                                <input id="sub_unit" type="text" class="form-control{{ $errors->has('sub_unit') ? ' is-invalid' : '' }}" name="sub_unit" value="{{ $subject->sub_unit }}" required autofocus>
-
-                                @if ($errors->has('sub_unit'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('sub_unit') }}</strong>
-                                    </span>
-                                @endif
+                                <select id="sub_unit" class="select2-multi form-control" name="sub_unit">
+                                  <option value="{{ $subject->sub_unit }}">{{ $subject->sub_unit }}</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="6">6</option>
+                                </select>
                             </div>
                         </div>
 

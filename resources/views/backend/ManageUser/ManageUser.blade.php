@@ -57,12 +57,28 @@
                                             <a href="{{ url('/changepassword', $value->id) }}">
                                                 <button type="submit" class="btn btn-info"><i class="fas fa-exchange-alt"></i> Password</button>
                                             </a>
-                                            <form action="{{route('manageuser.destroy', $value->id)}}" method="POST">
-                                                {!! method_field('DELETE') !!}
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> </button>
-                                            </form>
-
+                                            <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm"><i class="fa fa-times"></i></button>
+                                            <!-- Modal Confirm -->
+                                            <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                            <div class="modal-dialog modal-sm" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <i class="fas fa-exclamation-triangle fa-5x"></i><br>
+                                                    คุณต้องการ "ลบ" ผู้ใช้ท่านนี้ ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form action="{{route('manageuser.destroy', $value->id)}}" method="POST">
+                                                        {!! method_field('DELETE') !!}
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success">ใช่</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">ไม่ใช่</button>
+                                                    </form>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            </div>
+                                            <!-- End modal -->
                                         </div>
                                     </td>
                                 </tr>
@@ -71,6 +87,21 @@
                     </table> 
                 </div>
             </div>
+
+
+            @if(Auth::user()->role == 3)
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h3>For Admin</h3>
+                    </div>
+                    <a href="{{ url('/changepassword', Auth::user()->id) }}">
+                        <button class="btn btn-primary">Change Admin Password</button>                        
+                    </a>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>

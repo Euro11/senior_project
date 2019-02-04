@@ -15,7 +15,11 @@
                         </div>
                     @endif
                     <div class="alert alert-success" role="alert">
-                        <p>You are logged in! as ADMINISTRATOR</p>
+                        @if(Auth::user()->role == 3)
+                            <p>You are logged in! as ADMINISTRATOR</p>
+                        @else
+                            <p>You are logged in! as TEACHER</p>
+                        @endif
                     </div>
                     
                 </div>

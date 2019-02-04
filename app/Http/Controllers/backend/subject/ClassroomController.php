@@ -41,14 +41,23 @@ class ClassroomController extends Controller
      */
     public function store(Request $request)
     {
-        foreach ($request->student_id as $value) {
+        $value = collect($request->student_id)->toArray();
+        foreach ($value as $v) {
             $class = new Classroom;
             $class->section_id = $request->section_id;
-            $class->teacher_id = $request->teacher_id;
-            $class->student_id = $request->student_id;
+            
+            // must be string vvvv
+            $class->student_id = $v;
+            $class->created_at = now();
             $class->save();
+
+            // ADD student count
+            $std_count = Section::find($request->section_id);
+            $std_count->std_count += 1;
+            $std_count->save();
         }
-        return view('backend.ManageSubject.classroom', compact('section', 'teacher', 'student'));
+        $section = Section::find($request->section_id);
+        return redirect()->route('section.show', $section->id);
         
     }
 
@@ -60,10 +69,19 @@ class ClassroomController extends Controller
      */
     public function show($id)
     {
-        $section = Section::find($id);
-        $teacher = User::where('role', '=', 2)->get();
+        $classes = Classroom::select('student_id')->where('section_id', '=', $id)->get();
         $student = User::where('role', '=', 1)->get();
-        return view('backend.ManageSubject.addUsers', compact('section', 'teacher', 'student'));
+        // $student = DB::table('users')
+        //             ->select('users.*')
+        //             ->leftJoin('classroom','users.id', '=', 'classroom.student_id')                    
+        //             ->where([
+        //                     ['users.role', '=', 1],
+        //                     ['classroom.section_id', '=', $id],
+        //                     ['users.id', '!=', 'classroom.student_id'],
+        //             ])
+        //             ->get();
+        $section = Section::find($id);
+        return view('backend.ManageSubject.addUsers', compact('section', 'student', 'classes'));
     }
 
     /**
@@ -97,6 +115,13 @@ class ClassroomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $classroom = Classroom::find($id);
+        $section = Section::find($classroom->section_id);
+        $classroom->delete();
+
+        $section->std_count -= 1;
+        $section->save();
+        Session::flash('delete', 'User left the group.');
+        return redirect()->route('section.show', $section->id);
     }
 }

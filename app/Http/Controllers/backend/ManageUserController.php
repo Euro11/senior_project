@@ -21,7 +21,7 @@ class ManageUserController extends Controller
     public function index()
     {
         $users = DB::table('users')
-                        ->select('users.id','users.name','users.email','users.role','role.role_name')
+                        ->select('users.*','role.role_name')
                         ->join('role', 'users.role', '=', 'role.id')
                         ->where('users.role', '=', 1)
                         ->orWhere('users.role', '=', 2)
