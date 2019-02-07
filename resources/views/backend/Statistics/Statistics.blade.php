@@ -38,7 +38,7 @@
                     @foreach($section as $sec)
                         @if($sec->subject_id == $sub->id)
                             @if(Auth::user()->id == $sec->teacher_id)
-                                <a href="{{ route('ManageCheckAttendance.show', $sec->id) }}"><p>Section {{ $sec->name}} : {{ $sec->day_name}} ( {{ $sec->class_date}} )</p></a>
+                                <a href="{{ route('ViewStatistics.show', $sec->id) }}"><p>Section {{ $sec->name}} : {{ $sec->day_name}} ( {{ $sec->class_date}} )</p></a>
                             @else
                                 <p>Section {{ $sec->name}} : {{ $sec->day_name}} ( {{ $sec->class_date}} )</p>
                             @endif     

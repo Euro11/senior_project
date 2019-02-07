@@ -82,6 +82,9 @@
                                 <input name="sec_lat" type="text" id="lat_value" value="0" class="form-control" readonly><br>
                                 <label for="sec_lon">Longitude</label>  
                                 <input name="sec_lon" type="text" id="lon_value" value="0" class="form-control" readonly><br>
+
+                                <label for="check_radius">ขอบเขตในการเช็คชื่อ</label>  
+                                <input name="check_radius" type="number" value="200" class="form-control"><br>
                             </div>
                         </div>
 

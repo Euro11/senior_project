@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Subject;
+use App\Section;
 use Session;
 use DB;
 
@@ -53,7 +54,17 @@ class ViewStatisticsController extends Controller
      */
     public function show($id)
     {
-        //
+        $section = DB::table('section')->select('section.*', 'subject.sub_name', 'week.day_name')
+                    ->join('week', 'section.class_day', '=', 'week.id')
+                    ->join('subject', 'section.subject_id', '=', 'subject.id')
+                    ->where('section.id', '=', $id)
+                    ->get();
+        $section = $section[0];
+        $users = DB::table('classroom')->select('classroom.*', 'users.name', 'users.img_profile', 'users.std_id')
+                ->join('users', 'classroom.student_id', '=', 'users.id')
+                ->where('classroom.section_id', '=', $id)
+                ->get();
+        return view('backend.Statistics.DetailStatistics', compact('section', 'users'));
     }
 
     /**

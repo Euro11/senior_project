@@ -27,6 +27,21 @@
                         <div class="form-group row">
                             <div class="col-sm-2"></div>
                             <div class="col-md-8">
+                                <label for="std_id"><i class="fas fa-graduation-cap"></i> รหัสนักศึกษา</label>
+                                <input id="std_id" type="text" name="std_id" class="form-control">
+
+                                @if ($errors->has('std_id'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('std_id') }}</strong>
+                                    </span>
+                                @endif                                
+                            </div>
+                            <div class="col-sm-2"></div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-2"></div>
+                            <div class="col-md-8">
                                 <label for="email"><i class="fa fa-at"></i> อีเมล์</label>
                                 <input type="email" name="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" placeholder="อีเมล์" required autofocus>
 
@@ -93,4 +108,12 @@
         </div>
     </div>
 </div>
+@endsection
+@section('javascript')
+<script src="{{ asset('js/backend/inputmask.js')}}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#std_id').mask('999999999999-9');
+    });
+</script>
 @endsection

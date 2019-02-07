@@ -85,6 +85,9 @@
                                 <input name="sec_lat" type="text" id="lat_value" value="{{ $section->sec_lat}}" class="form-control" />  <br />
                                 <label for="">Longitude</label>  
                                 <input name="sec_lon" type="text" id="lon_value" value="{{ $section->sec_lon}}" class="form-control" />  <br />
+                                
+                                <label for="check_radius">ขอบเขตในการเช็คชื่อ</label>  
+                                <input name="check_radius" type="number" value="{{ $section->check_radius}}" class="form-control"><br>
                             </div>
                         </div>
 

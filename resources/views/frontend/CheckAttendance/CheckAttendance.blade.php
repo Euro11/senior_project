@@ -35,9 +35,13 @@
                                 <input name="user_lon" type="text" id="lon_value" value="0" class="form-control" readonly><br> 
                                 <label for="distance">ระยะห่าง</label>  
                                 <input name="distance" type="text" id="distance-between" value="0" class="form-control " readonly><br>
+                                <label for="check_radius">รัศมีการเช็คชื่อ(เมตร)</label>  
+                                <input name="check_radius" type="number" value="{!! $classroom->check_radius !!}" class="form-control " readonly><br>
                                 <div class="text-center">
-                                    @if($classroom->check_button_status == 1 || $classroom->check_button_status == 2)
-                                        <button type="submit" class="btn btn-danger btn-lg">Check-in</button>
+                                    @if($classroom->check_button_status == 1)
+                                        <button type="submit" class="btn btn-danger btn-lg" name="status_check" value="0">Check-in</button>
+                                    @elseif($classroom->check_button_status == 2)
+                                        <button type="submit" class="btn btn-danger btn-lg" name="status_check" value="2">Check-in</button>                                 
                                     @endif
                                 </div>
                             </form>
@@ -57,6 +61,7 @@ var arr_Destination = [
 var place_Marker = [];
 var pos;
 var posPlace;
+var mapCircle; // กำหนดตัวแปร สำหรับ เก็บ circle 
 var map; // กำหนดตัวแปร map ไว้ด้านนอกฟังก์ชัน เพื่อให้สามารถเรียกใช้งาน จากส่วนอื่นได้  
 var GGM; // กำหนดตัวแปร GGM ไว้เก็บ google.maps Object จะได้เรียกใช้งานได้ง่ายขึ้น  
 var my_Marker;  // กำหนดตัวแปรเก็บ marker ตำแหน่งปัจจุบัน หรือที่ระบุ  
@@ -84,7 +89,7 @@ function initialize() { // ฟังก์ชันแสดงแผนที�
                   
                 // กำหนด Option ของแผนที่  
                 var myOptions = {  
-                    zoom: 13, // กำหนดขนาดการ zoom  
+                    zoom: 15, // กำหนดขนาดการ zoom  
                     center: pos , // กำหนดจุดกึ่งกลาง  เป็นจุดที่เราอยู่ปัจจุบัน
                 };  
            
@@ -100,6 +105,18 @@ function initialize() { // ฟังก์ชันแสดงแผนที�
                     
                 posPlace = new GGM.LatLng(arr_Destination[0].lat,arr_Destination[0].lng);     
                 destinations.push(posPlace);
+
+                // เริ่มส่วนของการส้ราง circle
+                mapCircle = new GGM.Circle({ // สร้างตัว circle
+                  strokeColor: "#5cb85c", // สีของเส้นสัมผัส หรือสีขอบโดยรอบ
+                  strokeOpacity: 0.8, // ความโปร่งใส ของสีขอบโดยรอบ กำหนดจาก 0.0  -  0.1
+                  strokeWeight: 1, // ความหนาของสีขอบโดยรอบ เป็นหน่วย pixel
+                  fillColor: "#4cae4c", // สีของวงกลม circle
+                  fillOpacity: 0.35, // ความโปร่งใส กำหนดจาก 0.0  -  0.1
+                  map: map, // กำหนดว่า circle นี้ใช้กับแผนที่ชื่อ instance ว่า map
+                  center: posPlace, // ตำแหน่งศูนย์กลางของวลกลม ในที่นี้ใช้ตำแหน่งเดียวกับ ศูนย์กลางแผนที่
+                  radius: {!! $classroom->check_radius !!} // รัศมีวงกลม circle ทีสร้าง หน่ายเป็น เมตร
+                });
 
                 place_Marker[0] = new GGM.Marker({ // สร้างตัว marker  
                     position: posPlace,  // กำหนดไว้ที่เดียวกับจุดกึ่งกลาง  

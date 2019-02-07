@@ -51,7 +51,7 @@
                         </thead>
                         <tbody>
                             @foreach($data as $d)
-                            @if($d->status_check == 0)
+                            @if($d->status_check == 0 || $d->status_check == 2)
                             <tr>
                                 <td>{{ $d->name }}</td>
                                 <td>{{ $d->created_at }}</td>
@@ -115,7 +115,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
-                        <h1><b>Checked Successful</b></h1>
+                        <h1><b>ยืนยันสำเร็จ</b></h1>
                     </div>
                     <table id="datatables" class="table table-striped table-bordered table-success">
                         <thead>
@@ -128,6 +128,27 @@
                         <tbody>
                             @foreach($data as $d2)
                                 @if($d2->status_check == 1)
+                                <tr>
+                                    <td>{{ $d2->name }}</td>
+                                    <td>{{ $d2->created_at }}</td>
+                                    <td>{{ $d2->updated_at }}</td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table><br>
+                    <h1><b>สาย</b></h1>
+                    <table id="datatables" class="table table-striped table-bordered table-success">
+                        <thead>
+                            <tr>
+                                <th>ชื่อ</th>
+                                <th>เวลา</th>
+                                <th>ยืนยันเมื่อ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $d2)
+                                @if($d2->status_check == 3)
                                 <tr>
                                     <td>{{ $d2->name }}</td>
                                     <td>{{ $d2->created_at }}</td>

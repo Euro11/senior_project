@@ -27,6 +27,7 @@ class CreateSectionTable extends Migration
             $table->double('sec_lat');
             $table->double('sec_lon');
             $table->integer('check_button_status')->default(0);
+            $table->integer('check_radius');
             $table->timestamps();
         });
     }

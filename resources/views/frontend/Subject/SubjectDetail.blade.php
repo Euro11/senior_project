@@ -10,6 +10,12 @@
                   <strong>{{ $message }}</strong>
                 </div>
             @endif
+            @if ($message = Session::get('warning'))
+                <div class="alert alert-warning alert-block">
+                  <button type="button" class="close" data-dismiss="alert">×</button> 
+                  <strong>{{ $message }}</strong>
+                </div>
+            @endif
             <div class="card">
                 <div class="card-header">
                     <a href="{{ route('viewsubject.show', $user->id ) }}"><button class="btn btn-light"><i class="fas fa-arrow-left"></i></button></a>
@@ -23,7 +29,7 @@
                         <b>คำอธิบายรายวิชา :</b> {!! $section->sub_description !!} <br>
                     </div>
                     @foreach($usersAll as $u)
-                        @if($user->id == $u->student_id)
+                        @if($user->id == $u->student_id && ($section->check_button_status == 1 || $section->check_button_status == 2) )
                         <div class="col-md-12 text-center">
                             <a href="{{ route('checkattendance.show', $user->id) }}">
                                 <button class="btn btn-success btn-lg btn-block">เช็คชื่อ</button>

@@ -8,6 +8,7 @@ use App\User;
 use App\Classroom;
 use App\CheckAttendance;
 use Session;
+use DateTime;
 use Auth;
 use DB;
 
@@ -54,13 +55,40 @@ class CheckAttendanceController extends Controller
     {
         $user = User::find($id);
         $temp = DB::table('classroom')
-                        ->select('classroom.*', 'section.subject_id', 'section.check_button_status', 'subject.sub_name', 'subject.id as sub_id', 'section.sec_lat', 'section.sec_lon')
+                        ->select('classroom.*', 'section.subject_id', 'section.check_button_status', 'subject.sub_name', 'subject.id as sub_id', 'section.sec_lat', 'section.sec_lon', 'section.check_radius')
                         ->join('section', 'classroom.section_id', '=', 'section.id')
                         ->join('subject', 'section.subject_id', '=', 'subject.id')
                         ->where('classroom.student_id', '=', $id)
                         ->get();
-        $classroom = $temp[0];                        
-        // dd($classroom);
+        $classroom = $temp[0]; 
+        $checkList = CheckAttendance::all();                     
+        //Check checkattendance repeat / one day class
+        foreach ($checkList as $c) {
+            if ($classroom->id == $c->classroom_id) {
+
+                $morningStart = DateTime::createFromFormat('H:i a', "8:00 am");
+                $morningEnd = DateTime::createFromFormat('H:i a', "12:00 am");
+                if ($c->created_at >= $morningStart && $c->created_at <= $morningEnd) {
+                    Session::flash('warning', 'คุณได้เช็คชื่อแล้ว');
+                    return redirect()->back();
+                }
+
+                $afternoonStart = DateTime::createFromFormat('H:i a', "1:00 pm");
+                $afternoonEnd = DateTime::createFromFormat('H:i a', "5:00 pm");
+                if ($c->created_at >= $afternoonStart && $c->created_at <= $afternoonEnd) {
+                    Session::flash('warning', 'คุณได้เช็คชื่อแล้ว');
+                    return redirect()->back();
+                }
+
+                $eveningStart = DateTime::createFromFormat('H:i a', "5:00 pm");
+                $eveningEnd = DateTime::createFromFormat('H:i a', "9:00 pm");
+                if ($c->created_at >= $eveningStart && $c->created_at <= $eveningEnd) {
+                    Session::flash('warning', 'คุณได้เช็คชื่อแล้ว');
+                    return redirect()->back();
+                }
+            }
+        }
+        
         return view('frontend.CheckAttendance.CheckAttendance', compact('user', 'classroom'));
     }
 
@@ -103,12 +131,15 @@ class CheckAttendanceController extends Controller
         //cut "กม." for save float value.
         $distance = explode(" ", $request->distance);
         $temp = $distance[0];
-        // dd($temp);
-        if ($temp <= 0.30) {
+        // set check radius value for Km.
+        $radius = $request->check_radius / 1000;
+
+        if ($temp <= $radius) {
             try {
                 $check = new CheckAttendance;
                 $check->user_lat = $request->user_lat;
                 $check->user_lon = $request->user_lon;
+                $check->status_check = $request->status_check;
                 $check->distance = $temp;
                 $check->classroom_id = $id;
                 $check->save();

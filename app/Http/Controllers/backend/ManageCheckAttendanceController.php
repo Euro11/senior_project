@@ -81,11 +81,18 @@ class ManageCheckAttendanceController extends Controller
         $checkattendance = CheckAttendance::find($id);
 
         $classroom = Classroom::find($checkattendance->classroom_id);
-
-        $checkattendance->status_check = 1;
-        $checkattendance->updated_at = now();
-        $checkattendance->save();
-        Session::flash('success', 'User checked in.');
+        
+        if ($checkattendance->status_check == 0) {
+            $checkattendance->status_check = 1;
+            $checkattendance->updated_at = now();
+            $checkattendance->save();
+            Session::flash('success', 'User checked in.');
+        } else if ($checkattendance->status_check == 2) {            
+            $checkattendance->status_check = 3;
+            $checkattendance->updated_at = now();
+            $checkattendance->save();
+            Session::flash('warning', 'User checked in late.');
+        }        
         return redirect()->route('ManageCheckAttendance.show', $classroom->section_id);
     }
 
