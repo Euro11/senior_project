@@ -10,6 +10,7 @@ use App\Classroom;
 use App\CheckAttendance;
 use Session;
 use DB;
+use Carbon\Carbon;
 
 class ManageCheckAttendanceController extends Controller
 {
@@ -66,6 +67,7 @@ class ManageCheckAttendanceController extends Controller
                     ->join('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')
                     ->join('users', 'classroom.student_id', '=', 'users.id')
                     ->where('classroom.section_id', '=', $id)
+                    ->whereDate('check_attendance.created_at', Carbon::today())
                     ->get();
         return view('backend.ManageCheckAttendance.CheckDetail', compact('section', 'data'));
     }
@@ -94,6 +96,12 @@ class ManageCheckAttendanceController extends Controller
             Session::flash('warning', 'User checked in late.');
         }        
         return redirect()->route('ManageCheckAttendance.show', $classroom->section_id);
+        // Note
+        // id = 0 เช็คชื่อแล้ว ยังไม่ยืนยัน
+        // id = 1 เช็คชื่อแล้ว ยืนยันแล้ว
+        // id = 2 เช็คชื่อแล้ว สาย ยังไม่ยืนยัน
+        // id = 3 เช็คชื่อแล้ว สาย ยืนยันแล้ว
+        // id = 4 ขาดเรียน
     }
 
     /**

@@ -60,11 +60,20 @@ class ViewStatisticsController extends Controller
                     ->where('section.id', '=', $id)
                     ->get();
         $section = $section[0];
-        $users = DB::table('classroom')->select('classroom.*', 'users.name', 'users.img_profile', 'users.std_id')
-                ->join('users', 'classroom.student_id', '=', 'users.id')
+
+        $users = DB::table('users')->select('users.*', 'classroom.section_id')
+                ->join('classroom', 'users.id', '=', 'classroom.student_id')
                 ->where('classroom.section_id', '=', $id)
                 ->get();
-        return view('backend.Statistics.DetailStatistics', compact('section', 'users'));
+
+        $static = DB::table('check_attendance')
+                ->select('check_attendance.id', 'users.name', 'check_attendance.status_check', 'classroom.section_id', 'classroom.student_id', 'check_attendance.created_at')
+                ->join('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')
+                ->join('users', 'classroom.student_id', '=', 'users.id')
+                ->where('classroom.section_id', '=', $id)
+                ->orderBy('check_attendance.created_at', 'asc')
+                ->get();
+        return view('backend.Statistics.DetailStatistics', compact('section', 'users', 'static'));
     }
 
     /**

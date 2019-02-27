@@ -43,7 +43,7 @@
                     <label for="section_id" class="col-md-4 col-form-label text-md-right">{{ __('Section ID') }}</label>
 
                     <div class="col-md-6">                                   
-                        <input type="text" class="form-control" name="section_id" value="{{ $section->id }}">
+                        <input type="text" class="form-control" name="section_id" value="{{ $section->id }}" readonly>
                     </div>
                 </div>
 

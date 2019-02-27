@@ -69,19 +69,22 @@ class ClassroomController extends Controller
      */
     public function show($id)
     {
-        $classes = Classroom::select('student_id')->where('section_id', '=', $id)->get();
-        $student = User::where('role', '=', 1)->get();
-        // $student = DB::table('users')
-        //             ->select('users.*')
-        //             ->leftJoin('classroom','users.id', '=', 'classroom.student_id')                    
-        //             ->where([
-        //                     ['users.role', '=', 1],
-        //                     ['classroom.section_id', '=', $id],
-        //                     ['users.id', '!=', 'classroom.student_id'],
-        //             ])
-        //             ->get();
+        // $student = User::where('role', '=', 1)->get();
+
+        $student = User::select('users.*', 'classroom.student_id', 'classroom.section_id')
+                    ->leftJoin('classroom','users.id', '=', 'classroom.student_id')
+                    ->whereNull('classroom.student_id')                
+                    ->where([
+                            ['users.role', '=', 1],
+                            ['classroom.section_id', '=', $id],
+                    ])
+                    ->get();
+
+
         $section = Section::find($id);
-        return view('backend.ManageSubject.addUsers', compact('section', 'student', 'classes'));
+
+        dd($student);
+        return view('backend.ManageSubject.addUsers', compact('section', 'student'));
     }
 
     /**

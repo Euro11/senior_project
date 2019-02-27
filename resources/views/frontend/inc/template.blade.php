@@ -36,7 +36,7 @@
                 </div>
                     <a href="{{ url('/') }}"><li>หน้าแรก</li></a>
                     <a href="{{ route('profile', $user->id) }}"><li>ข้อมูลส่วนตัว</li></a>
-                    <a href="{{ route('statistic.show', $user->id) }}"><li>สถิติ</li></a>
+                    <a href="{{ url('/statistic') }}"><li>สถิติ</li></a>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><li>ออกจากระบบ</li></a>
 
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

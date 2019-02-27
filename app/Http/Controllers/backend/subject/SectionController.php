@@ -8,9 +8,11 @@ use App\Subject;
 use App\Section;
 use App\Classroom;
 use App\User;
+use App\CheckAttendance;
 use Session;
 use DB;
 use Auth;
+use Carbon\Carbon;
 
 class SectionController extends Controller
 {
@@ -132,15 +134,41 @@ class SectionController extends Controller
                 $section->save();
                 Session::flash('success','เริ่มการเช็คชื่อ');
             }
-            elseif ($request->check_button_status == 0) {
-                $section->check_button_status = $request->check_button_status;
-                $section->save();
-                Session::flash('delete', 'หมดเวลาเรียน');
-            }
             elseif ($request->check_button_status == 2) {
                 $section->check_button_status = $request->check_button_status;
                 $section->save();
                 Session::flash('warning', 'หมดเวลาเช็คชื่อ');
+            }
+            elseif ($request->check_button_status == 0) {
+                $section->check_button_status = $request->check_button_status;
+                $section->save();
+
+                $class = DB::table('classroom')
+                        ->select('classroom.*')
+                        ->leftJoin('check_attendance', 'classroom.id', '=', 'check_attendance.classroom_id')
+                        ->whereNull('check_attendance.classroom_id')
+                        ->where('classroom.section_id', '=', $section->id)
+                        ->whereDate('check_attendance.created_at', Carbon::today())
+                        ->get();
+                        
+                $check = DB::table('check_attendance')
+                        ->select('check_attendance.*', 'classroom.section_id')
+                        ->rightJoin('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')
+                        ->whereNull('check_attendance.classroom_id')
+                        ->where('classroom.section_id', '=', $section->id)
+                        ->whereDate('check_attendance.created_at', Carbon::today())
+                        ->get();
+                dd($check);
+                foreach ($class as $c) {
+                    $miss_class = new CheckAttendance;
+                    $miss_class->user_lat = 0;
+                    $miss_class->user_lon = 0;
+                    $miss_class->status_check = 4;
+                    $miss_class->distance = 0;
+                    $miss_class->classroom_id = $c->id;
+                    $miss_class->save();  
+                }
+                Session::flash('delete', 'หมดเวลาเรียน');
             }
             return redirect()->route('ManageCheckAttendance.show', $section_prev->id);
         } else {

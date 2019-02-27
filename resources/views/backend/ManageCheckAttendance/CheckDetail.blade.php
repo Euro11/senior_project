@@ -117,7 +117,7 @@
                     <div class="card-title">
                         <h1><b>ยืนยันสำเร็จ</b></h1>
                     </div>
-                    <table id="datatables" class="table table-striped table-bordered table-success">
+                    <table class="table table-striped table-bordered table-success">
                         <thead>
                             <tr>
                                 <th>ชื่อ</th>
@@ -136,9 +136,9 @@
                                 @endif
                             @endforeach
                         </tbody>
-                    </table><br>
+                    </table>
                     <h1><b>สาย</b></h1>
-                    <table id="datatables" class="table table-striped table-bordered table-success">
+                    <table class="table table-striped table-bordered table-success">
                         <thead>
                             <tr>
                                 <th>ชื่อ</th>
@@ -158,7 +158,34 @@
                             @endforeach
                         </tbody>
                     </table> 
+                    <h1><b>ขาดเรียน</b></h1>
+                    <table class="table table-striped table-bordered table-success">
+                        <thead>
+                            <tr>
+                                <th>ชื่อ</th>
+                                <th>เวลา</th>
+                                <th>ยืนยันเมื่อ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $d2)
+                                @if($d2->status_check == 4)
+                                <tr>
+                                    <td>{{ $d2->name }}</td>
+                                    <td>{{ $d2->created_at }}</td>
+                                    <td>{{ $d2->updated_at }}</td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table> 
                 </div>
+                <span class="text-muted">Notice : ( id = 0 เช็คชื่อแล้ว ยังไม่ยืนยัน,
+                 id = 1 เช็คชื่อแล้ว ยืนยันแล้ว,
+                 id = 2 เช็คชื่อแล้ว สาย ยังไม่ยืนยัน,
+                 id = 3 เช็คชื่อแล้ว สาย ยืนยันแล้ว,
+                 id = 4 ขาดเรียน )</span>
+                
             </div>
         </div>
     </div>
