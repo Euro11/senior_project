@@ -1,13 +1,6 @@
 @extends('frontend.inc.template')
 
 @section('content')
-<style>
-    #container1 {
-        max-width: 800px;
-        height: 115px;
-        margin: 1em auto;
-    }
-</style>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md">
@@ -31,7 +24,7 @@
                                 สถิติวิชา {{ $s->sub_name }} : Section {{ $s->name}} {{ $s->day_name}} ( {{ $s->class_date}} )</h3>
                                 @endforeach
                             </div>
-                            <div id="container1"></div>
+                            <div id="detail-stat"></div>
                             <div class="text-center">
                             @if($score >= 12)
                                 <span style="color: #00bca1"><i class="fas fa-check-circle fa-7x"></i></span>
@@ -83,7 +76,7 @@ Highcharts.setOptions({
     }
 });
 
-Highcharts.chart('container1', {
+Highcharts.chart('detail-stat', {
     chart: {
         marginTop: 0
     },
@@ -107,7 +100,7 @@ Highcharts.chart('container1', {
     },
     series: [{
         data: [{
-            y: {{ $score }},
+            y: {{ $score }} ,
             target: 12
         }]
     }],

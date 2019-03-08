@@ -80,28 +80,12 @@
                                         <a href="{{ route('ManageCheckAttendance.edit', $d->id) }}"> 
                                             <button type="submit" class="btn btn-success">Agree <i class="fas fa-check"></i></button>
                                         </a>
-                                        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm">Cancel <i class="fas fa-times"></i></button>
-                                        <!-- Modal Confirm -->
-                                        <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog modal-sm" role="document">
-                                          <div class="modal-content">
-                                            <div class="modal-body text-center">
-                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <i class="fas fa-exclamation-triangle fa-5x"></i><br>
-                                                คุณต้องการ "ยกเลิก" เคสนี้ใช่หรือไม่ ?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <form action="{{ route('ManageCheckAttendance.destroy', $d->id) }}" method="POST">
-                                                    {!! method_field('DELETE') !!}
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success">ใช่</button>
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">ไม่ใช่</button>
-                                                </form>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        </div>
-                                        <!-- End modal -->               
+
+                                        <form action="{{ route('ManageCheckAttendance.destroy', $d->id) }}" method="POST">
+                                        {!! method_field('DELETE') !!}
+                                        @csrf
+                                            <button type="submit" class="btn btn-danger">Cancel <i class="fa fa-times"></i></button>
+                                        </form>            
                                     </div>
                                 </td>
                             </tr>

@@ -46,12 +46,47 @@
             </div>
         </div>
     </div>
+    <!-- desktop -->
     <div class="d-none d-sm-block">
-        <img src="{{ asset('img\banner.png')}}" alt="banner" class="banner">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img class="d-block w-100" src="{{ asset('img\bannerQR.png')}}" alt="First slide" class="banner">
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="{{ asset('img\banner.png')}}" alt="Second slide" class="banner">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
-
+    <!-- mobile -->
     <div class="d-sm-none">
-        <img src="{{ asset('img\banner.png')}}" alt="banner" class="banner-mobile">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img class="d-block w-100" src="{{ asset('img\bannerQR.png')}}" alt="First slide" class="banner-mobile">
+                </div>
+                <div class="carousel-item">
+                  <img class="d-block w-100" src="{{ asset('img\banner.png')}}" alt="Second slide" class="banner-mobile">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
     </div>
     <main class="container" style="padding-top: 50px;position: relative;">
         @yield('content')

@@ -134,6 +134,8 @@ class CheckAttendanceController extends Controller
         // set check radius value for Km.
         $radius = $request->check_radius / 1000;
 
+        
+        
         if ($temp <= $radius) {
             try {
                 $check = new CheckAttendance;
@@ -143,10 +145,48 @@ class CheckAttendanceController extends Controller
                 $check->distance = $temp;
                 $check->classroom_id = $id;
                 $check->save();
+            
+                // Line Notify
+                $classroom = DB::table('classroom')
+                            ->select('classroom.*', 'subject.sub_name', 'users.name as teacher_name')
+                            ->join('section', 'classroom.section_id', '=', 'section.id')
+                            ->join('subject', 'section.subject_id', '=', 'subject.id')
+                            ->join('users', 'section.teacher_id', '=', 'users.id')
+                            ->where('classroom.id', '=', $id)
+                            ->get();
+                $classroom = $classroom[0];
+                
+                $user = User::find(Auth::user()->id);
+                $token = "UROrd92sVN1PICk5Em2yl0EFoVDoHat74lpa4k8njSA";
+                $str = $user->name.' ได้เข้าเรียนวิชา '.$classroom->sub_name."\nอาจารย์ผู้สอน : ".$classroom->teacher_name;
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://notify-api.line.me/api/notify",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => "message=".$str,
+                    CURLOPT_HTTPHEADER => array(
+                        "Authorization: Bearer ".$token,
+                        "Cache-Control: no-cache",
+                        "Content-Type: application/x-www-form-urlencoded"
+                    ),
+                ));
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                curl_close($curl);
+                if ($err) {
+                    echo "cURL Error #:" . $err;
+                } else {
+                    echo $response;
+                }
+                // End Line Notify
             } catch (Exception $e) {
                 die($e->getMessage());
             }
-            $classroom = Classroom::find($id);
             Session::flash('success', 'คุณเช็คชื่อสำเร็จ!');
             return redirect()->route('viewsubject.showMember', [$classroom->student_id, $classroom->section_id]);            
         } else {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
 use App\Subject;
 use App\Section;
 use Session;
@@ -82,9 +83,41 @@ class ViewStatisticsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    //=========================== Report Function ===========================
     public function edit($id)
     {
-        //
+        // dd($id);
+        $user = User::find($id);
+        // Line Notify
+        $token = "UROrd92sVN1PICk5Em2yl0EFoVDoHat74lpa4k8njSA";
+        $str = 'นักศึกษา '.$user->name.' ไม่เข้าเรียนตามกำหนด มีความเสี่ยงที่จะไม่มีสิทธิ์ในการสอบ ';
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://notify-api.line.me/api/notify",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "message=".$str,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Bearer ".$token,
+                "Cache-Control: no-cache",
+                "Content-Type: application/x-www-form-urlencoded"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            echo $response;
+        }
+        // End Line Notify
+        Session::flash('warning', 'คุณได้ report นักศึกษาเรียบร้อยแล้ว!');
+        return back();
     }
 
     /**

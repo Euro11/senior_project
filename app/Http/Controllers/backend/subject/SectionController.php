@@ -140,34 +140,78 @@ class SectionController extends Controller
                 Session::flash('warning', 'หมดเวลาเช็คชื่อ');
             }
             elseif ($request->check_button_status == 0) {
+
+                $check = CheckAttendance::select('check_attendance.classroom_id')
+                        ->join('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')
+                        ->where('classroom.section_id', '=', $section->id)
+                        ->whereDate('check_attendance.created_at', Carbon::today())
+                        ->get();
+
+                $missClass = Classroom::where('classroom.section_id', '=', $section->id)
+                        ->whereNotIn('id', $check)
+                        ->get();
+
+                // dd($missClass);
+                foreach ($missClass as $c) {
+                    $save_miss_class = new CheckAttendance;
+                    $save_miss_class->user_lat = 0;
+                    $save_miss_class->user_lon = 0;
+                    $save_miss_class->status_check = 4;
+                    $save_miss_class->distance = 0;
+                    $save_miss_class->classroom_id = $c->id;
+                    $save_miss_class->save();  
+                }
+
+                // Line Notify
+                $ReportMissClass = CheckAttendance::select('users.name')
+                            ->join('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')                            
+                            ->join('users', 'classroom.student_id', '=', 'users.id')                            
+                            ->where('check_attendance.status_check', '=', 4)
+                            ->whereDate('check_attendance.created_at', Carbon::today())
+                            ->get();
+
+                $message = Null;
+                foreach ($ReportMissClass as $value) {
+                    $message = $message.$value->name."\n";
+                }
+                
+                $subject = Subject::select('subject.sub_name')
+                            ->join('section', 'subject.id', '=', 'section.subject_id')
+                            ->where('section.id', '=', $id)
+                            ->get();
+                $subject_name = $subject[0]->sub_name;
+
+                // dd($message);
+                $token = "UROrd92sVN1PICk5Em2yl0EFoVDoHat74lpa4k8njSA";
+                $str = "นักศึกษาที่ขาดเรียนวิชา ".$subject_name. " วันนี้\n".$message;
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://notify-api.line.me/api/notify",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_POSTFIELDS => "message=".$str,
+                    CURLOPT_HTTPHEADER => array(
+                        "Authorization: Bearer ".$token,
+                        "Cache-Control: no-cache",
+                        "Content-Type: application/x-www-form-urlencoded"
+                    ),
+                ));
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+                curl_close($curl);
+                if ($err) {
+                    echo "cURL Error #:" . $err;
+                } else {
+                    echo $response;
+                }
+                // End Line Notify
+
                 $section->check_button_status = $request->check_button_status;
                 $section->save();
-
-                $class = DB::table('classroom')
-                        ->select('classroom.*')
-                        ->leftJoin('check_attendance', 'classroom.id', '=', 'check_attendance.classroom_id')
-                        ->whereNull('check_attendance.classroom_id')
-                        ->where('classroom.section_id', '=', $section->id)
-                        ->whereDate('check_attendance.created_at', Carbon::today())
-                        ->get();
-                        
-                $check = DB::table('check_attendance')
-                        ->select('check_attendance.*', 'classroom.section_id')
-                        ->rightJoin('classroom', 'check_attendance.classroom_id', '=', 'classroom.id')
-                        ->whereNull('check_attendance.classroom_id')
-                        ->where('classroom.section_id', '=', $section->id)
-                        ->whereDate('check_attendance.created_at', Carbon::today())
-                        ->get();
-                dd($check);
-                foreach ($class as $c) {
-                    $miss_class = new CheckAttendance;
-                    $miss_class->user_lat = 0;
-                    $miss_class->user_lon = 0;
-                    $miss_class->status_check = 4;
-                    $miss_class->distance = 0;
-                    $miss_class->classroom_id = $c->id;
-                    $miss_class->save();  
-                }
                 Session::flash('delete', 'หมดเวลาเรียน');
             }
             return redirect()->route('ManageCheckAttendance.show', $section_prev->id);

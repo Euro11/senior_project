@@ -47,28 +47,12 @@
                                         <td>{{ $c->name }}</td>
                                         <td>
                                             <div class="form-group d-flex justify-content-around">
-                                                <button type="submit" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirm"><i class="fa fa-times"></i> delete </button>
-                                                <!-- Modal Confirm -->
-                                                <div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                                <div class="modal-dialog modal-sm" role="document">
-                                                  <div class="modal-content">
-                                                    <div class="modal-body text-center">
-                                                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        <i class="fas fa-exclamation-triangle fa-5x"></i><br>
-                                                        คุณต้องการ "ลบ" ผู้ใช้ออกจากกลุ่มใช่หรือไม่ ?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <form action="{{route('class.destroy', $c->id)}}" method="POST">
-                                                            {!! method_field('DELETE') !!}
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-success">ใช่</button>
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">ไม่ใช่</button>
-                                                        </form>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                </div>
-                                                <!-- End modal --> 
+
+                                                <form action="{{route('class.destroy', $c->id)}}" method="POST">
+                                                {!! method_field('DELETE') !!}
+                                                @csrf
+                                                    <button type="submit" class="btn btn-danger"><i class="fa fa-times"></i> delete </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

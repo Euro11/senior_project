@@ -39,6 +39,7 @@
                                 @endfor
                                 <th>คะแนนรวม</th>
                                 <th>ผ่าน/ไม่ผ่าน</th>
+                                <th>รายงาน</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,6 +81,11 @@
                                 @else
                                     <td class="success">ผ่าน</td>
                                 @endif
+                                <td>
+                                    <a href="{{ route('ViewStatistics.edit', $u->id)}}">
+                                        <button type="submit" class="btn btn-warning btn-block"><i class="far fa-share-square"></i></button>
+                                    </a> 
+                                </td>
                             </tr>
                             <!-- รีเซ็ตค่าให้เป็นเริ่มต้น -->
                             <?php $score = 0.0; $countCol = 0; ?>

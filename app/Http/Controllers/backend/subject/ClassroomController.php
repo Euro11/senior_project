@@ -69,21 +69,18 @@ class ClassroomController extends Controller
      */
     public function show($id)
     {
-        // $student = User::where('role', '=', 1)->get();
-
-        $student = User::select('users.*', 'classroom.student_id', 'classroom.section_id')
-                    ->leftJoin('classroom','users.id', '=', 'classroom.student_id')
-                    ->whereNull('classroom.student_id')                
-                    ->where([
-                            ['users.role', '=', 1],
-                            ['classroom.section_id', '=', $id],
-                    ])
+        $studentRepeat = Classroom::select('classroom.student_id')
+                    ->join('users','classroom.student_id', '=', 'users.id')
+                    ->where('classroom.section_id', '=', $id)
                     ->get();
 
+        $student = User::where('role', '=', 1)
+                    ->whereNotIn('id', $studentRepeat)
+                    ->get();
 
         $section = Section::find($id);
 
-        dd($student);
+        // dd($student);
         return view('backend.ManageSubject.addUsers', compact('section', 'student'));
     }
 

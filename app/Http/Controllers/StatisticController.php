@@ -78,10 +78,8 @@ class StatisticController extends Controller
                     ->get();
         $score = 0;
         foreach ($static as $stat) {
-            if ($stat->status_check == 1) {
+            if ($stat->status_check == 1 || $stat->status_check == 3) {
                 $score += 1;
-            } else if ($stat->status_check == 3) {
-                $score += 0.5;
             }
         }
         // dd($score);
